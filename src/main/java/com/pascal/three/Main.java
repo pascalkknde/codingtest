@@ -8,37 +8,52 @@ public class Main {
     private static StringBuilder info = new StringBuilder();
     private static Scanner userInput = new Scanner(System.in);
 
-    public static void main(String[] args) {
-
+    public static void main(String[] args) throws IOException {
+        String folderName = setSiteName();
+        setInfon(folderName);
+        setAuthorName();
+        createFolder(folderName);
+        createIndexFile(folderName);
+        otherFolder(folderName);
+        System.out.println(getInfo().toString());
     }
 
-    public static void setSiteName(){
-        System.out.println("Site name: ");
-        String siteName = userInput.nextLine();
+    private static void setInfon(String name) {
+        info.append(name);
+        info.append('\n');
     }
-    public static void setAuthorName(){
-        System.out.println("Author: ");
+
+    private static StringBuilder getInfo() {
+        return info;
+    }
+
+    private static String setSiteName(){
+        System.out.print("Site name: ");
+        return userInput.nextLine();
+    }
+    private static void setAuthorName(){
+        System.out.print("Author: ");
         userInput.nextLine();
-
     }
-    public static void createFolder(String folderName){
-        String path = "C:\\Project\\codingtestforpascalkkndes\\src\\main\\resources\\"+folderName;
-        File file = new File(path);
+    private static void createFolder(String folderName){
+        File file = new File(folderName);
+        String name = "Created ./"+folderName;
         if (!file.exists()) {
             if (file.mkdir()) {
-                generateIndex(folderName);
-                System.out.println("Created!");
+                setInfo(name);
             } else {
                 System.out.println("Failed to create directory!");
             }
         }
     }
-    private static void generateIndex(String folderName){
+    private static void createIndexFile(String folderName){
         String path = folderName+"\\"+ "index.html";
-        String content = "<meta charset=\"utf-8\"><title>\n"+ "index.html" +"</title>";
+        String name = "Created ./"+folderName+"/index.html";
+        String content = "<meta charset=\"utf-8\"><title>\n"+ folderName +"</title>";
         try (Writer writer = new BufferedWriter(new OutputStreamWriter(
                 new FileOutputStream(path), StandardCharsets.UTF_8))) {
             writer.write(content);
+            setInfo(name);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -47,14 +62,20 @@ public class Main {
         Main.info.append(message);
         Main.info.append("\n");
     }
-    private static void otherFolder(String folderName){
-        System.out.println("Do you want a folder for JavaScript?");
+    private static void otherFolder(String folderName) throws IOException {
+        System.out.print("Do you want a folder for JavaScript?");
+        File js = new File(folderName+"/js");
+        File css = new File(folderName+"/css");
         if (userInput.nextLine().equalsIgnoreCase("y")){
-
+            if (js.mkdir()){
+             setInfo("Created "+"./js/");
+            }
         }
         System.out.println("Do you want a folder for CSS?");
         if (userInput.nextLine().equalsIgnoreCase("y")){
-
+            if (css.mkdir()){
+                setInfo("Created "+"./css/");
+            }
         }
     }
 }
